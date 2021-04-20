@@ -7,22 +7,22 @@ DISK_THICK = 1
 DISK_CLEARANCE = 5
 DISKS_COUNT = 10
 
-AXIS_R = 3
+AXIS_R = 4
 SHAFT_R = AXIS_R + 4
 SHAFT_CLEARANCE = 0.5
 SHAFT_EXTRA_LEN = 20
 
 ALL_CONES_EXTRA_R = 7
-CONES_R = 50
-CONES_BOTH_THICK = 10
+ALL_CONES_THICK = 5
+CONES_R = DISK_R
+SECOND_CONES_R = 7
+SECOND_CONES_BOLT_R = 2
 
-SECOND_CONES_R = 20
-SECOND_CONES_BOTH_THICK = 10
+FIX_BEAR_R = 22
+FIX_BEAR_THICK = 7
+FIX_BOLT_R = 2
 
-FIX_BEAR_R = 10
-FIX_BEAR_THICK = 8
-FIX_BOLT_R = 0.5
-
+print(f'Gears relation {CONES_R/SECOND_CONES_R}')
 def disk():
 	cyl = cylinder(DISK_R, DISK_THICK)
 	cyl2 = cylinder(SHAFT_R + 5, DISK_CLEARANCE)
@@ -55,17 +55,17 @@ def _cones(r, thick, axis_d):
 	return con1 + con2 - hole
 
 def cones():
-	c = _cones(CONES_R, CONES_BOTH_THICK, AXIS_R)
+	c = _cones(CONES_R, ALL_CONES_THICK, AXIS_R)
 	return c.translate(z=DISKS_COUNT * DISK_CLEARANCE + SHAFT_EXTRA_LEN/2)
 
 def second_cones():
-	c = _cones(SECOND_CONES_R, SECOND_CONES_BOTH_THICK, 1)
+	c = _cones(SECOND_CONES_R, ALL_CONES_THICK, 1)
 	return c.translate(z=DISKS_COUNT * DISK_CLEARANCE + SHAFT_EXTRA_LEN/2, x=CONES_R*2)
 
 def fix():
-	b = box(FIX_BEAR_R*2+20, FIX_BEAR_R*2+10, FIX_BEAR_THICK+3, center=True).fillet(r=2)
-	bearing = cylinder(FIX_BEAR_R, FIX_BEAR_THICK)
-	axis = cylinder(AXIS_R, 1000).translate(z=-500)
+	b = box(FIX_BEAR_R*2+FIX_BEAR_R, FIX_BEAR_R*2+FIX_BEAR_R*0.8, FIX_BEAR_THICK*1.3, center=True).fillet(r=2).translate(z=(FIX_BEAR_THICK+3)/-2)
+	bearing = cylinder(FIX_BEAR_R, FIX_BEAR_THICK*1.1).translate(z=-FIX_BEAR_THICK*1.1)
+	axis = cylinder(AXIS_R*1.1, 1000).translate(z=-500)
 	bolt1 = cylinder(FIX_BOLT_R, 1000).translate(z=-500, x=FIX_BEAR_R+5, y=FIX_BEAR_R+1)
 	bolt2 = cylinder(FIX_BOLT_R, 1000).translate(z=-500, x=-FIX_BEAR_R-5, y=FIX_BEAR_R+1)
 	bolt3 = cylinder(FIX_BOLT_R, 1000).translate(z=-500, x=FIX_BEAR_R+5, y=-FIX_BEAR_R-1)
@@ -86,5 +86,7 @@ disp(cones())
 disp(second_cones())
 disp(fix().translate(z=shaft().bbox().zmin-50))
 disp(fix().rotateX(3.1415).translate(z=shaft().bbox().zmax+50))
+#disp(fix())
+
 show()
 
