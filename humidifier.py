@@ -138,6 +138,6 @@ disp(second_cones())
 disp(fix().translate(z=shaft().bbox().zmin-50))
 disp(fix().rotateX(PI).translate(z=shaft().bbox().zmax+50))
 
-# disp(fix())
+#disp(fix())
 #disp(disk())
 show()
