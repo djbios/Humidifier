@@ -1,0 +1,51 @@
+esphome:
+  name: djbios_humidifier
+  platform: ESP8266
+  board: d1_mini
+
+wifi:
+  ssid: "ASUS"
+  password: "wifipassword"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Djbios Humidifier"
+    password: "w11ntxDK17kz"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+sensor:
+  - platform: dht
+    pin: D2
+    temperature:
+      name: "Living Room Temperature"
+    humidity:
+      name: "Living Room Humidity"
+      id: hum
+    update_interval: 60s
+
+output:
+  - platform: esp8266_pwm
+    pin: D1
+    frequency: 1000 Hz
+    id: fans_pwm_output
+
+
+climate:
+  - platform: pid
+    name: "Humidity controller"
+    sensor: hum
+    default_target_temperature: 60
+    heat_output: fans_pwm_output
+    control_parameters:
+      kp: 0.49460
+      ki: 0.00487
+      kd: 12.56301
